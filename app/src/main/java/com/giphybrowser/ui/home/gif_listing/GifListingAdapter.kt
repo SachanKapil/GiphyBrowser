@@ -93,23 +93,14 @@ class GifListingAdapter(private val listener: GigListAdapterListener) :
         return paginationFooterState
     }
 
-    fun isEmpty(): Boolean {
-        return gifList.size == 0
-    }
-
-    fun getListSize(): Int {
-        return gifList.size
-    }
-
     fun getList(): ArrayList<GifBean> {
         return gifList
     }
 
     fun loadData(currentPageNumber: Int, list: ArrayList<GifBean>) {
+        removeLoading()
         if (currentPageNumber == 0) {
             gifList.clear()
-        } else {
-            removeLoading()
         }
         gifList.addAll(list)
         notifyDataSetChanged()

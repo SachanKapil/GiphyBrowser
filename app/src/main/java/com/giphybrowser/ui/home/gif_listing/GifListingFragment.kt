@@ -139,10 +139,8 @@ class GifListingFragment : BaseFragment<FragmentGifListingBinding>(),
                         onFailure(it)
                         if (nextPageNumber > 0) {
                             adapter.updateLoading(AppConstants.PaginationFooterState.RETRY)
-                        } else if (adapter.isEmpty()) {
-                            binding.progressBarLayout.setErrorWithRetryButton(
-                                it.errorMessage
-                            )
+                        } else {
+                            binding.progressBarLayout.setErrorWithRetryButton(getString(R.string.message_something_went_wrong))
                         }
                     } ?: let {
                         objectWrappedResponse?.data?.let { gifList ->
@@ -173,17 +171,15 @@ class GifListingFragment : BaseFragment<FragmentGifListingBinding>(),
 
     override fun onRefresh() {
         if (AppUtils.isNetworkAvailable(requireContext())) {
-            nextPageNumber = 0
-            adapter.removeLoading()
-            hitGetGifListingApi()
+            hitGetGifListingApi(0)
         } else {
             binding.refreshLayout.isRefreshing = false
             showToastShort(getString(R.string.message_no_internet_connection))
         }
     }
 
-    private fun hitGetGifListingApi() {
-        viewModel.hitGetGifListApi(nextPageNumber)
+    private fun hitGetGifListingApi(pageNumber: Int = nextPageNumber) {
+        viewModel.hitGetGifListApi(pageNumber)
     }
 
     override fun onGifClick(gifBean: GifBean) {
@@ -193,8 +189,6 @@ class GifListingFragment : BaseFragment<FragmentGifListingBinding>(),
     override fun openFooterRetryClick() {
         if (AppUtils.isNetworkAvailable(requireContext())) {
             adapter.updateLoading(AppConstants.PaginationFooterState.PROGRESS)
-            nextPageNumber =
-                adapter.getListSize().div(AppConstants.ValueConstants.PAGINATION_ITEM_LIMIT)
             hitGetGifListingApi()
         } else {
             showToastShort(getString(R.string.message_no_internet_connection))

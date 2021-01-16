@@ -27,11 +27,11 @@ class GifListingViewModel : ViewModel() {
         return gifListResponseLiveData
     }
 
-    fun hitGetGifListApi(pageNo: Int) {
+    fun hitGetGifListApi(pageNumber: Int) {
         val getGifListRequest = GetGifListRequest(
             BuildConfig.GIPHY_API_KEY,
             AppConstants.ValueConstants.PAGINATION_ITEM_LIMIT,
-            pageNo * 25
+            pageNumber * 25
         )
         gifListRequestLiveData.value = getGifListRequest
     }
